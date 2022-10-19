@@ -46,7 +46,11 @@ async def help_handler(_, event: Message):
 
 @Bot.on_message(filters.incoming)
 async def inline_handlers(_, event: Message):
-    if message.text:
+    if event.text == '/start':
+        return
+    answers = f'**Searching For "{event.text}" 🔍**'
+    async for message in User.search_messages(chat_id=Config.CHANNEL_ID, limit=50, query=event.text):
+        if message.text:
             thumb = None
             f_text = message.text
             msg_text = message.text.html
