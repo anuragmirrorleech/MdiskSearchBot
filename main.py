@@ -46,7 +46,7 @@ async def help_handler(_, event: Message):
 
 @Bot.on_message(filters.incoming)
 async def inline_handlers(_, event: Message):
-     if message.text:
+    if message.text:
             thumb = None
             f_text = message.text
             msg_text = message.text.html
@@ -66,12 +66,11 @@ async def inline_handlers(_, event: Message):
              ))
     try:
         msg = await event.reply_text(answers)
-        await asyncio.sleep(60)
+        await asyncio.sleep(30)
         await event.delete()
         await msg.delete()
     except:
         print(f"[{Config.BOT_SESSION_NAME}] - Failed to Answer - {event.from_user.first_name}")
-
 
 @Bot.on_callback_query()
 async def button(bot, cmd: CallbackQuery):
