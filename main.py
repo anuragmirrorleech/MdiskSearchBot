@@ -46,18 +46,24 @@ async def help_handler(_, event: Message):
 
 @Bot.on_message(filters.incoming)
 async def inline_handlers(_, event: Message):
-    if event.text == '/start':
-        return
-    answers = f'**📂 Results For ➠ {event.text} \n\n▰▱▰▱▰▱▰▱▰▱▰▱▰▱\n➠ Type Only Movie Name With Correct Spelling.✍️\n➠ Add Year For Better Result.🗓️\n▰▱▰▱▰▱▰▱▰▱▰▱▰▱\n\n**'
-    async for message in User.search_messages(chat_id=Config.CHANNEL_ID, limit=50, query=event.text):
-        if message.text:
+     if message.text:
             thumb = None
             f_text = message.text
             msg_text = message.text.html
             if "|||" in message.text:
                 f_text = message.text.split("|||", 1)[0]
                 msg_text = message.text.html.split("|||", 1)[0]
-            answers += f'**🍿 Title ➠ ' + '' + f_text.split("\n", 1)[0] + '' + '\n\n📜 About ➠ ' + '' + f_text.split("\n", 2)[-1] + ' \n\n▰▱▰▱▰▱▰▱▰▱▰▱▰▱\nLink Will Auto Delete In 60Sec...⏰\n▰▱▰▱▰▱▰▱▰▱▰▱▰▱\n\n**'
+            answers.append(InlineQueryResultArticle(
+                    title="{}".format(f_text.split("\n", 1)[0]),
+                    description="{}".format(f_text.split("\n", 2)[-1]),
+                    thumb_url=thumb,
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Search Again", switch_inline_query_current_chat=""), InlineKeyboardButton("Go Inline", switch_inline_query="")]]),
+                    input_message_content=InputTextMessageContent(
+                        message_text=msg_text,
+                        parse_mode="html",
+                        disable_web_page_preview=True
+                    )
+             ))
     try:
         msg = await event.reply_text(answers)
         await asyncio.sleep(60)
